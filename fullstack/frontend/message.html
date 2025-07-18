@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Messages</title>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: Arial, sans-serif; }
+    button {
+      margin-left: 10px;
+      padding: 5px;
+      background-color: red;
+      color: white;
+      border: none;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Messages</h2>
+  <ul id="messageList">Loading...</ul>
+
+  <script>
+    fetch("/api/messages")
+      .then(response => response.json())
+      .then(data => {
+        const list = document.getElementById("messageList");
+        list.innerHTML = "";
+
+        if (data.length === 0) {
+          list.innerHTML = "<li>No messages found.</li>";
+          return;
+        }
+
+        data.forEach(row => {
+          const li = document.createElement("li");
+          li.textContent = `ID: ${row.id} | Name: ${row.name} | Message: ${row.message}`;
+
+          const delBtn = document.createElement("button");
+          delBtn.textContent = "Delete";
+          delBtn.onclick = () => {
+            if (confirm("Are you sure to delete this message?")) {
+              fetch(`/api/messages/${row.id}`, { method: "DELETE" })
+                .then(response => response.json())
+                .then(res => {
+                  alert(res.message || "Deleted.");
+                  location.reload(); // Refresh
+                });
+            }
+          };
+
+          li.appendChild(delBtn);
+          list.appendChild(li);
+        });
+      })
+      .catch(err => {
+        document.getElementById("messageList").innerHTML = "<li>Error loading messages.</li>";
+        console.error(err);
+      });
+  </script>
+</body>
+</html>
+

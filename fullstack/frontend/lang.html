@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Flask API Frontend</title>
+</head>
+<body>
+	<h1 id="pageTitle"> Messages </h1>
+<style>
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+</style>
+<button onclick="toggleLang()"> change language </button>
+<script>
+	const strings = {
+  en: {
+    title: "Messages",
+    noMessages: "No messages found.",
+    delete: "Delete",
+    confirmDelete: "Are you sure to delete this message?"
+  },
+  hi: {
+    title: "संदेश",
+    noMessages: "कोई संदेश नहीं मिला।",
+    delete: "हटाएं",
+    confirmDelete: "क्या आप वाकई इस संदेश को हटाना चाहते हैं?"
+  }
+};
+	function toggleLang(){
+		const current=localStorage.getItem("lang") || "en";
+		const newLang=current==="en"?"hi":"en";
+		localStorage.setItem("lang",newLang);
+		applyLang(newLang);
+	}
+	function applyLang(){
+		document.getElementById("pageTitle").innerText=strings[lang].title;
+	}
+	window.onload=function(){
+		const lang=localStorage.getItem("lang") || "en";
+		applyLang(lang);
+	};
+</script>
+  <h1>Data from Flask API:</h1>
+  <h2><a href="submit.html">want to submit form</a></h2>
+  <p id="output">Loading...</p>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
