@@ -33,4 +33,25 @@ A complete full-stack application built with **Flask (Python)** on the backend, 
 
 ## 🧑‍💻 Folder Structure
 
-
+project/
+│
+├── backend/
+│ ├── app.py
+│ ├── auth.py
+│ ├── admin.py
+│ ├── database.py
+│ └── requirements.txt
+│
+├── frontend/
+│ ├── index.html
+│ ├── login.html
+│ ├── register.html
+│ ├── dashboard.html
+│ ├── admin.html
+│ └── script.js
+│
+├── nginx/
+│ └── default.conf
+│
+├── docker-compose.yml
+└── README.md
