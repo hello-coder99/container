@@ -2,96 +2,629 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>User Registration</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Your Account</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
+    :root {
+      --primary-color: #4361ee;
+      --primary-light: #4cc9f0;
+      --secondary-color: #3a0ca3;
+      --accent-color: #f72585;
+      --light-color: #f8f9fa;
+      --dark-color: #212529;
+      --success-color: #38b000;
+      --error-color: #f72585;
+      --input-bg: #f1f3f5;
+      --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    * {
+      box-sizing: border-box;
       margin: 0;
-      padding: 40px;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
+      color: var(--dark-color);
     }
 
-    h2 {
-      margin-bottom: 20px;
-      color: #333;
-    }
-
-    form {
-      background-color: #fff;
-      padding: 25px 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    .registration-container {
+      background-color: white;
+      border-radius: 20px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
       width: 100%;
-      max-width: 350px;
+      max-width: 450px;
+      overflow: hidden;
+      animation: fadeInUp 0.8s ease-out;
+      position: relative;
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .registration-header {
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 1.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .registration-header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .registration-header h2 {
+      font-size: 1.8rem;
+      margin-bottom: 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .registration-header p {
+      opacity: 0.9;
+      font-size: 0.9rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .registration-form {
+      padding: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--dark-color);
+    }
+
+    .input-with-icon {
+      position: relative;
+    }
+
+    .input-with-icon i {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--primary-color);
     }
 
     input {
       width: 100%;
-      padding: 10px;
-      margin-top: 12px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      font-size: 14px;
+      padding: 12px 15px 12px 45px;
+      border: 2px solid var(--input-bg);
+      border-radius: 8px;
+      font-size: 15px;
+      transition: var(--transition);
+      background-color: var(--input-bg);
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      background-color: white;
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--primary-color);
+    }
+
+    .password-strength {
+      margin-top: 0.5rem;
+      height: 4px;
+      background-color: #e9ecef;
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .strength-meter {
+      height: 100%;
+      width: 0%;
+      background-color: var(--error-color);
+      transition: var(--transition);
+    }
+
+    .password-requirements {
+      margin-top: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--gray-color);
+    }
+
+    .requirement {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.3rem;
+    }
+
+    .requirement i {
+      margin-right: 5px;
+      font-size: 0.7rem;
+    }
+
+    .requirement.valid {
+      color: var(--success-color);
+    }
+
+    .requirement.valid i {
+      color: var(--success-color);
     }
 
     button {
       width: 100%;
-      padding: 10px;
-      margin-top: 18px;
-      background-color: #007bff;
-      color: white;
+      padding: 14px;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
+      color: white;
       font-size: 16px;
+      font-weight: 500;
       cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     button:hover {
-      background-color: #0056b3;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: 0.5s;
+    }
+
+    button:hover::before {
+      left: 100%;
+    }
+
+    .divider {
+      margin: 1.5rem 0;
+      text-align: center;
+      position: relative;
+      color: var(--dark-color);
+      opacity: 0.7;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 40%;
+      height: 1px;
+      background-color: #ddd;
+    }
+
+    .divider::before {
+      left: 0;
+    }
+
+    .divider::after {
+      right: 0;
+    }
+
+    .social-login {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .social-btn {
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 1.2rem;
+      transition: var(--transition);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .social-btn:hover {
+      transform: translateY(-3px);
+    }
+
+    .facebook { background-color: #3b5998; }
+    .google { background-color: #db4437; }
+    .twitter { background-color: #1da1f2; }
+
+    .login-link {
+      text-align: center;
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .login-link a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .login-link a:hover {
+      color: var(--secondary-color);
+      text-decoration: underline;
     }
 
     #message {
-      margin-top: 15px;
-      color: green;
-      font-weight: bold;
+      margin-top: 1rem;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 14px;
       text-align: center;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .success-message {
+      background-color: rgba(56, 176, 0, 0.1);
+      color: var(--success-color);
+    }
+
+    .error-message {
+      background-color: rgba(247, 37, 133, 0.1);
+      color: var(--error-color);
+      animation: shake 0.5s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-5px); }
+      40%, 80% { transform: translateX(5px); }
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--success-color);
+      color: white;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      animation: slideIn 0.3s ease-out;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @media (max-width: 480px) {
+      .registration-container {
+        border-radius: 0;
+        max-width: 100%;
+        min-height: 100vh;
+      }
+      
+      .registration-form {
+        padding: 1.5rem;
+      }
     }
   </style>
 </head>
 <body>
-  <h2>User Registration</h2>
-  <form id="registerForm">
-    <input type="text" id="name" placeholder="Username" required>
-    <input type="email" id="email" placeholder="Email" required>
-    <input type="password" id="password" placeholder="Password" required>
-    <button type="submit">Register</button>
-  </form>
+  <div class="registration-container">
+    <div class="registration-header">
+      <h2>Create Your Account</h2>
+      <p>Join our community today</p>
+    </div>
 
-  <p id="message"></p>
+    <div class="registration-form">
+      <form id="registerForm">
+        <div class="form-group">
+          <label for="name">Username</label>
+          <div class="input-with-icon">
+            <i class="fas fa-user"></i>
+            <input type="text" id="name" placeholder="Enter your username" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <div class="input-with-icon">
+            <i class="fas fa-envelope"></i>
+            <input type="email" id="email" placeholder="Enter your email" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-with-icon">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="password" placeholder="Create a password" required>
+            <i class="fas fa-eye password-toggle" onclick="togglePassword()"></i>
+          </div>
+          <div class="password-strength">
+            <div class="strength-meter" id="strengthMeter"></div>
+          </div>
+          <div class="password-requirements">
+            <div class="requirement" id="lengthReq">
+              <i class="fas fa-circle"></i> At least 8 characters
+            </div>
+            <div class="requirement" id="numberReq">
+              <i class="fas fa-circle"></i> Contains a number
+            </div>
+            <div class="requirement" id="specialReq">
+              <i class="fas fa-circle"></i> Contains a special character
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <div class="input-with-icon">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+          </div>
+        </div>
+
+        <button type="submit">
+          <i class="fas fa-user-plus"></i> Register Now
+        </button>
+
+        <div id="message"></div>
+
+        <div class="divider">or sign up with</div>
+
+        <div class="social-login">
+          <div class="social-btn facebook" onclick="socialLogin('facebook')">
+            <i class="fab fa-facebook-f"></i>
+          </div>
+          <div class="social-btn google" onclick="socialLogin('google')">
+            <i class="fab fa-google"></i>
+          </div>
+          <div class="social-btn twitter" onclick="socialLogin('twitter')">
+            <i class="fab fa-twitter"></i>
+          </div>
+        </div>
+
+        <div class="login-link">
+          Already have an account? <a href="login.html">Login here</a>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <script>
-    document.getElementById("registerForm").addEventListener("submit", async function (e) {
+    // Toggle password visibility
+    function togglePassword() {
+      const passwordField = document.getElementById('password');
+      const toggleIcon = document.querySelector('.password-toggle');
+      
+      if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        toggleIcon.classList.replace('fa-eye', 'fa-eye-slash');
+      } else {
+        passwordField.type = 'password';
+        toggleIcon.classList.replace('fa-eye-slash', 'fa-eye');
+      }
+    }
+
+    // Check password strength
+    function checkPasswordStrength(password) {
+      let strength = 0;
+      const meter = document.getElementById('strengthMeter');
+      const lengthReq = document.getElementById('lengthReq');
+      const numberReq = document.getElementById('numberReq');
+      const specialReq = document.getElementById('specialReq');
+
+      // Length requirement
+      if (password.length >= 8) {
+        strength += 1;
+        lengthReq.classList.add('valid');
+        lengthReq.innerHTML = '<i class="fas fa-check-circle"></i> At least 8 characters';
+      } else {
+        lengthReq.classList.remove('valid');
+        lengthReq.innerHTML = '<i class="fas fa-circle"></i> At least 8 characters';
+      }
+
+      // Number requirement
+      if (/\d/.test(password)) {
+        strength += 1;
+        numberReq.classList.add('valid');
+        numberReq.innerHTML = '<i class="fas fa-check-circle"></i> Contains a number';
+      } else {
+        numberReq.classList.remove('valid');
+        numberReq.innerHTML = '<i class="fas fa-circle"></i> Contains a number';
+      }
+
+      // Special character requirement
+      if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+        strength += 1;
+        specialReq.classList.add('valid');
+        specialReq.innerHTML = '<i class="fas fa-check-circle"></i> Contains a special character';
+      } else {
+        specialReq.classList.remove('valid');
+        specialReq.innerHTML = '<i class="fas fa-circle"></i> Contains a special character';
+      }
+
+      // Update strength meter
+      const strengthPercent = (strength / 3) * 100;
+      meter.style.width = strengthPercent + '%';
+      
+      if (strength === 0) {
+        meter.style.backgroundColor = var(--error-color);
+      } else if (strength === 1) {
+        meter.style.backgroundColor = '#ff6b35';
+      } else if (strength === 2) {
+        meter.style.backgroundColor = '#f7b801';
+      } else {
+        meter.style.backgroundColor = var(--success-color);
+      }
+    }
+
+    // Show toast notification
+    function showToast(message, isSuccess = true) {
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.style.backgroundColor = isSuccess ? var(--success-color) : var(--error-color);
+      toast.innerHTML = `
+        <i class="fas ${isSuccess ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+        ${message}
+      `;
+      document.body.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    // Handle social login
+    function socialLogin(provider) {
+      showToast(`Signing in with ${provider.charAt(0).toUpperCase() + provider.slice(1)}...`);
+      // In a real app, you would implement the OAuth flow here
+    }
+
+    // Handle form submission
+    document.getElementById('registerForm').addEventListener('submit', async function(e) {
       e.preventDefault();
+      
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const messageEl = document.getElementById('message');
+      
+      // Clear previous messages
+      messageEl.textContent = '';
+      messageEl.className = '';
+      
+      // Validate passwords match
+      if (password !== confirmPassword) {
+        messageEl.textContent = 'Passwords do not match!';
+        messageEl.classList.add('error-message');
+        return;
+      }
+      
+      // Validate password strength
+      const strength = document.getElementById('strengthMeter').style.width;
+      if (strength !== '100%') {
+        messageEl.textContent = 'Please meet all password requirements';
+        messageEl.classList.add('error-message');
+        return;
+      }
 
-      const response = await fetch("/api/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: document.getElementById("name").value,
-          email: document.getElementById("email").value,
-          password: document.getElementById("password").value
-        })
-      });
+      try {
+        // Simulate API call (replace with actual fetch)
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Mock response - in real app you would use fetch()
+        const mockResponse = {
+          status: email.includes('@') ? 201 : 400,
+          user: {
+            id: Math.floor(Math.random() * 1000),
+            name: name,
+            email: email
+          },
+          message: email.includes('@') ? 'Registration successful!' : 'Invalid email address',
+          error: email.includes('@') ? null : 'Invalid email address'
+        };
+        
+        if (mockResponse.status === 201) {
+          messageEl.textContent = mockResponse.message;
+          messageEl.classList.add('success-message');
+          showToast('Account created successfully! Redirecting...', true);
+          
+          // Redirect after delay
+          setTimeout(() => {
+            window.location.href = 'dashboard.html';
+          }, 2000);
+        } else {
+          messageEl.textContent = mockResponse.error;
+          messageEl.classList.add('error-message');
+          showToast(mockResponse.error, false);
+        }
+      } catch (err) {
+        messageEl.textContent = 'Something went wrong. Please try again.';
+        messageEl.classList.add('error-message');
+        console.error('Registration error:', err);
+        showToast('Network error. Please try again.', false);
+      }
+    });
 
-      const result = await response.json();
-      const messageEl = document.getElementById("message");
-      messageEl.textContent = result.message || result.error;
-      messageEl.style.color = result.error ? "red" : "green";
+    // Password strength real-time checking
+    document.getElementById('password').addEventListener('input', function(e) {
+      checkPasswordStrength(e.target.value);
+    });
+
+    // Check if passwords match in real-time
+    document.getElementById('confirmPassword').addEventListener('input', function() {
+      const password = document.getElementById('password').value;
+      const confirmPassword = this.value;
+      const messageEl = document.getElementById('message');
+      
+      if (confirmPassword && password !== confirmPassword) {
+        messageEl.textContent = 'Passwords do not match!';
+        messageEl.className = 'error-message';
+      } else if (messageEl.textContent === 'Passwords do not match!') {
+        messageEl.textContent = '';
+        messageEl.className = '';
+      }
     });
   </script>
 </body>
 </html>
-

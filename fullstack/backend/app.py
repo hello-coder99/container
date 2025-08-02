@@ -35,27 +35,36 @@ def init_db():
             uid INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
             name VARCHAR(50) NOT NULL,
             email VARCHAR(50) NOT NULL UNIQUE,
-            password VARCHAR(50) NOT NULL
+            password VARCHAR(50) NOT NULL,
+            is_admin BOOLEAN DEFAULT FALSE
         )
     """)
     conn.commit()
     cursor.close()
 # Call this once when Flask starts
 # ✅ MySQL connection (reads from .env via Docker Compose)
-@app.route('/admin',methods=['GET'])
-def admin():
-    data=request.json()
-    adminemail=data.get("adminemail")
-    adminpass=data.get("adminpass")
-    if not (adminemail and adminpass):
-        return jsonify({"error":"cannot logged as admin"})
+@app.route('/api/export',methods=['POST'])
+def export_file():
+    data=request.get_json()
+    email=data.get('email')
+    password=data.get('password')
+    if not (email and password):
+        return jsonify({"error":"invalid credentials"}), 400
     try:
         conn=connection()
+        cursor=conn.cursor()
+        cursor.execute("SELECT name,email,password FROM users WHERE email=%s",(email,))
+        text=cursor.fetchone()
+        if password==text[2]:
+            with open("userdata.txt",'w') as file:
+                file.write(str(text))
+            return jsonify({"message":"successfully written"}), 201
+    except Exception:
+        return jsonify({"error":"unable to fulfil requests"}), 500 
+    finally:
+        cursor.close()
+        conn.close()
 
-@app.route('/api/export',methods=['GET'])
-def export_file():
-    data=request.json()
-    name
 @app.route('/api/register',methods=['POST'])
 def register():
     data=request.json
@@ -135,7 +144,7 @@ def get_messages():
         conn=connection()
         cursor = conn.cursor()
         cursor.execute("SELECT id,name,message,created_at FROM messages ORDER BY id DESC")
-        data = cursor.fetchall()
+        data=cursor.fetchall()
         messages=[{"id":row[0],"name":row[1],"message":row[2],"datetime":row[3]} for row in data]
         cursor.close()
         conn.close()
